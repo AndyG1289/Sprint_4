@@ -1,6 +1,7 @@
 package ru.praktikum.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 
 public class OrderPage {
@@ -12,6 +13,7 @@ public class OrderPage {
     private final By lastNameField = By.xpath("//input[@placeholder='* Фамилия']");
     private final By addressField = By.xpath("//input[@placeholder='* Адрес: куда привезти заказ']");
     private final By metroStationField = By.xpath("//input[@placeholder='* Станция метро']");
+    private final By metroStationOption = By.className("select-search__row");
     private final By phoneField = By.xpath("//input[@placeholder='* Телефон: на него позвонит курьер']");
     private final By nextButton = By.xpath("//button[text()='Далее']");
 
@@ -36,7 +38,10 @@ public class OrderPage {
         driver.findElement(firstNameField).sendKeys(name);
         driver.findElement(lastNameField).sendKeys(surname);
         driver.findElement(addressField).sendKeys(address);
+
         driver.findElement(metroStationField).sendKeys(metro);
+        driver.findElement(metroStationOption).click();
+
         driver.findElement(phoneField).sendKeys(phone);
         driver.findElement(nextButton).click();
     }
@@ -44,9 +49,12 @@ public class OrderPage {
     public void fillAboutRent(String date, String period, boolean black, boolean grey, String comment) {
         driver.findElement(dateField).sendKeys(date);
         driver.findElement(rentalPeriodDropdown).click();
-        driver.findElement(By.xpath(String.format("//div[@class='Dropdown-option' and text()='%s']", period))).click();
+        driver.findElement(By.xpath(String.format(
+                "//div[@class='Dropdown-option' and text()='%s']", period))).click();
+
         if (black) driver.findElement(blackColorCheckbox).click();
         if (grey) driver.findElement(greyColorCheckbox).click();
+
         driver.findElement(commentField).sendKeys(comment);
         driver.findElement(orderButton).click();
         driver.findElement(confirmButton).click();
@@ -56,3 +64,4 @@ public class OrderPage {
         return driver.findElements(successModal).size() > 0;
     }
 }
+

@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class OrderTest extends BaseTest {
+
     private final String name;
     private final String surname;
     private final String address;
@@ -35,16 +36,18 @@ public class OrderTest extends BaseTest {
         this.comment = comment;
     }
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "Заказ: {0} {1}")
     public static Object[][] getTestData() {
         return new Object[][]{
-                {"Иван", "Иванов", "Москва, ул. Пушкина", "Черкизовская", "+79991234567", "30.10.2025", "двое суток", true, false, "Позвоните заранее"},
-                {"Анна", "Петрова", "Москва, ул. Ленина", "Курская", "+79997654321", "01.11.2025", "сутки", false, true, "Без звонка"}
+                {"Иван", "Иванов", "Москва, ул. Пушкина", "Черкизовская",
+                        "+79991234567", "30.10.2025", "двое суток", true, false, "Позвоните заранее"},
+                {"Анна", "Петрова", "Москва, ул. Ленина", "Курская",
+                        "+79997654321", "01.11.2025", "сутки", false, true, "Без звонка"}
         };
     }
 
     @Test
-    public void testOrderFlowFromTopButton() {
+    public void testOrderFromTopButton() {
         MainPage mainPage = new MainPage(driver);
         mainPage.clickOrderTopButton();
 
@@ -52,6 +55,18 @@ public class OrderTest extends BaseTest {
         orderPage.fillOrderForm(name, surname, address, metro, phone);
         orderPage.fillAboutRent(date, period, black, grey, comment);
 
-        assertTrue("Заказ не был успешно оформлен", orderPage.isOrderSuccessful());
+        assertTrue("Заказ не был оформлен через верхнюю кнопку", orderPage.isOrderSuccessful());
+    }
+
+    @Test
+    public void testOrderFromBottomButton() {
+        MainPage mainPage = new MainPage(driver);
+        mainPage.clickOrderBottomButton();
+
+        OrderPage orderPage = new OrderPage(driver);
+        orderPage.fillOrderForm(name, surname, address, metro, phone);
+        orderPage.fillAboutRent(date, period, black, grey, comment);
+
+        assertTrue("Заказ не был оформлен через нижнюю кнопку", orderPage.isOrderSuccessful());
     }
 }
